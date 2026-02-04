@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 // function to print array elements
 void printArray(unsigned char array[], int size) {
@@ -8,18 +9,26 @@ void printArray(unsigned char array[], int size) {
   printf("\n");
 }
 
+// Higher fitness returns a lower number aka penalty function
+int fitness_score(int candidate, int target) {
+    int fitness_score = abs(target - candidate);
+    return fitness_score;
+}
+
+
 void swap(unsigned char* a, unsigned char* b) {
     int t = *a;
     *a = *b;
     *b = t;
 }
 
-int partition(unsigned char *arr, int leftMost, int rightMost) {
+int partitionOnFitness(unsigned char *arr, int leftMost, int rightMost, int target) {
     unsigned char pivot = *(arr + rightMost);
+    int fitness_pivot = fitness_score(pivot, target);
     int storeIndex = leftMost - 1;
 
     for (int i = leftMost; i < rightMost; i++) {
-        if (arr[i] < pivot) {
+        if (fitness_score(arr[i], target) < fitness_pivot) {
             storeIndex++;
             swap(&arr[storeIndex], &arr[i]);
         }
@@ -28,15 +37,15 @@ int partition(unsigned char *arr, int leftMost, int rightMost) {
     return storeIndex + 1;
 }
 
-void quickSort(unsigned char *arr, int start, int end) {
+void quickSortFitness(unsigned char *arr, int start, int end, int target) {
     if (start < end) {
 
-        int partition_index = partition(arr, start, end);
+        int partition_index = partitionOnFitness(arr, start, end, target);
 
         // recursion left of pivot
-        quickSort(arr, start, partition_index -1);
+        quickSortFitness(arr, start, partition_index -1, target);
 
         // recursion right of pivot
-        quickSort(arr, partition_index + 1, end);
+        quickSortFitness(arr, partition_index + 1, end, target);
     }
 }

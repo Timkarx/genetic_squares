@@ -5,13 +5,18 @@
 #include <stdlib.h>
 #include <time.h>
 
-int fitness_function(int candidate, int target) {
-    int fitness_score = 255 - abs(target - candidate);
-    return fitness_score;
-}
+//unsigned char* generate_candidates() {
+//    const int ARRAY_SIZE = 15;
+//    unsigned char squares[ARRAY_SIZE];
+//
+//    for (int i = 0; i < ARRAY_SIZE; i++) {
+//       squares[i] = rand() % 256;
+//    }
+//    return squares;
+//}
 
-unsigned char* iterate_generation(unsigned char *shade, int size) {
-    quickSort(shade, 0, size - 1);
+unsigned char* iterate_generation(unsigned char *shade, int size, int target) {
+    quickSortFitness(shade, 0, size - 1, target);
     int replacementHalf = size / 2;
     for (int i = 0; i < size / 2; i++) {
         unsigned char child = *(shade + i);
@@ -56,21 +61,17 @@ void paint_circles(char *shade, int size) {
 
 int main() {
     srand(time(NULL));
-    const int DUMMY_ARRAY_SIZE = 15;
-    int i;
-    unsigned char dummy_squares[DUMMY_ARRAY_SIZE];
+    const int ARRAY_SIZE = 15;
+    unsigned char squares[ARRAY_SIZE];
 
-    for (i = 0; i < DUMMY_ARRAY_SIZE; i++) {
-       dummy_squares[i] = rand() % 256;
+    for (int i = 0; i < ARRAY_SIZE; i++) {
+       squares[i] = rand() % 256;
     }
 
-    printArray(dummy_squares, sizeof(dummy_squares));
-    iterate_generation(dummy_squares, sizeof(dummy_squares));
-    printf("Gen 1: \n");
-    printArray(dummy_squares, sizeof(dummy_squares));
-    iterate_generation(dummy_squares, sizeof(dummy_squares));
-    printf("Gen 2: \n");
-    printArray(dummy_squares, sizeof(dummy_squares));
+    printArray(squares, sizeof(squares));
+    quickSortFitness(squares, 0, sizeof(squares), 100);
+    printf("Sorted by fitness: \n");
+    printArray(squares, sizeof(squares));
 
     // dummy_squares is char[] so 1 byte per arr element
     // paint_circles(dummy_squares, sizeof(dummy_squares));
