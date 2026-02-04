@@ -6,9 +6,9 @@
 #include <time.h>
 #include <unistd.h>
 
-const int SQR_SIZE = 40;
+const int SQR_SIZE = 10;
 const int GAP_SIZE = 5;
-const int ARRAY_SIZE = 100;
+const int ARRAY_SIZE = 300;
 
 const int CANVAS_WIDTH = (10 * SQR_SIZE) + (11 * GAP_SIZE);
 const int rows = (ARRAY_SIZE + 9) / 10;
@@ -72,9 +72,9 @@ int main() {
     SetTargetFPS(1);
 
     while (!WindowShouldClose()) {
-        quickSortFitness(squares, 0, sizeof(squares), 100);
-        iterate_generation(squares, sizeof(squares));
         paint_circles(squares, sizeof(squares));
+        quickSortFitness(squares, 0, sizeof(squares), 0);
+        iterate_generation(squares, sizeof(squares));
     }
     CloseWindow();
 
