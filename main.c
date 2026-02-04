@@ -5,6 +5,21 @@
 #include <stdlib.h>
 #include <time.h>
 
+int fitness_function(int candidate, int target) {
+    int fitness_score = 255 - abs(target - candidate);
+    return fitness_score;
+}
+
+unsigned char* iterate_generation(unsigned char *shade, int size) {
+    quickSort(shade, 0, size - 1);
+    int replacementHalf = size / 2;
+    for (int i = 0; i < size / 2; i++) {
+        unsigned char child = *(shade + i);
+        *(shade + replacementHalf + i) = child;
+    }
+    return shade;
+}
+
 void paint_circles(char *shade, int size) {
     const int SQR_SIZE = 40;
     const int GAP_SIZE = 5;
@@ -50,8 +65,11 @@ int main() {
     }
 
     printArray(dummy_squares, sizeof(dummy_squares));
-    quickSort(dummy_squares, 0, sizeof(dummy_squares) - 1);
-    printf("Sorted array in ascending order: \n");
+    iterate_generation(dummy_squares, sizeof(dummy_squares));
+    printf("Gen 1: \n");
+    printArray(dummy_squares, sizeof(dummy_squares));
+    iterate_generation(dummy_squares, sizeof(dummy_squares));
+    printf("Gen 2: \n");
     printArray(dummy_squares, sizeof(dummy_squares));
 
     // dummy_squares is char[] so 1 byte per arr element
