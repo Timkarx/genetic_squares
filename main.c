@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <unistd.h>
+
 const int SQR_SIZE = 40;
 const int GAP_SIZE = 5;
 const int ARRAY_SIZE = 100;
@@ -11,7 +13,7 @@ const int ARRAY_SIZE = 100;
 const int CANVAS_WIDTH = (10 * SQR_SIZE) + (11 * GAP_SIZE);
 const int rows = (ARRAY_SIZE + 9) / 10;
 const int CANVAS_HEIGHT = rows * SQR_SIZE + (rows + 1) * GAP_SIZE;
-const int MUTATION_RATE = 10;
+const int MUTATION_RATE = 1;
 
 //unsigned char* generate_candidates() {
 //    const int ARRAY_SIZE = 15;
@@ -35,9 +37,7 @@ unsigned char* iterate_generation(unsigned char *shade, int size) {
     return shade;
 }
 
-void paint_circles(char *shade, int size) {
-    InitWindow(CANVAS_WIDTH, CANVAS_HEIGHT, "raygui - controls test suite");
-    while (!WindowShouldClose()) {
+void paint_circles(unsigned char *shade, int size) {
         BeginDrawing();
         ClearBackground(WHITE);
 
@@ -58,8 +58,6 @@ void paint_circles(char *shade, int size) {
         }
 
         EndDrawing();
-    }
-    CloseWindow();
 }
 
 int main() {
@@ -70,15 +68,15 @@ int main() {
        squares[i] = rand() % 256;
     }
 
-    printf("Generation 1: \n");
-    printArray(squares, sizeof(squares));
+    InitWindow(CANVAS_WIDTH, CANVAS_HEIGHT, "Genetic Squares");
+    SetTargetFPS(1);
 
-    for (int i = 1; i < 10; i++) {
+    while (!WindowShouldClose()) {
         quickSortFitness(squares, 0, sizeof(squares), 100);
         iterate_generation(squares, sizeof(squares));
-        printf("Generation %d: \n", i);
-        printArray(squares, sizeof(squares));
+        paint_circles(squares, sizeof(squares));
     }
+    CloseWindow();
 
     // dummy_squares is char[] so 1 byte per arr element
     // paint_circles(dummy_squares, sizeof(dummy_squares));
