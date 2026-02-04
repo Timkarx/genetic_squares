@@ -6,11 +6,12 @@
 #include <time.h>
 const int SQR_SIZE = 40;
 const int GAP_SIZE = 5;
-const int ARRAY_SIZE = 16;
+const int ARRAY_SIZE = 100;
 
 const int CANVAS_WIDTH = (10 * SQR_SIZE) + (11 * GAP_SIZE);
 const int rows = (ARRAY_SIZE + 9) / 10;
 const int CANVAS_HEIGHT = rows * SQR_SIZE + (rows + 1) * GAP_SIZE;
+const int MUTATION_RATE = 10;
 
 //unsigned char* generate_candidates() {
 //    const int ARRAY_SIZE = 15;
@@ -26,6 +27,9 @@ unsigned char* iterate_generation(unsigned char *shade, int size) {
     int replacementHalf = size / 2;
     for (int i = 0; i < size / 2; i++) {
         unsigned char child = *(shade + i);
+        if (rand() % 100 <= MUTATION_RATE) {
+            child = rand() % 256;
+        }
         *(shade + replacementHalf + i) = child;
     }
     return shade;
