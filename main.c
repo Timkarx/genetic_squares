@@ -12,6 +12,7 @@ enum {
     SQUARE_SIZE = 16,
     GAP_SIZE = 4,
     PANEL_PADDING = 24,
+    PANEL_GAP = 28,
     ELITE_COUNT = 12,
     MUTANT_COUNT = 9
 };
@@ -65,8 +66,13 @@ static void draw_key_preview(const Individual *individual, int origin_x, int ori
 }
 
 int main(void) {
-    const int canvas_width = PANEL_PADDING * 3 + grid_width() * 2;
-    const int canvas_height = PANEL_PADDING * 2 + grid_height() + 260;
+    const int side_panel_width = 700;
+    const int canvas_width = PANEL_PADDING * 2 + grid_width() * 2 + side_panel_width + PANEL_GAP * 2;
+    const int canvas_height = PANEL_PADDING * 2 + grid_height() + 120;
+    const int target_x = PANEL_PADDING;
+    const int best_x = target_x + grid_width() + PANEL_GAP;
+    const int side_x = best_x + grid_width() + PANEL_GAP;
+    const int content_y = 100;
 
     unsigned char target[SOLUTION_SIZE];
     Population population;
@@ -90,7 +96,7 @@ int main(void) {
     rkga_evaluate_population(&population, target);
 
     InitWindow(canvas_width, canvas_height, "RKGA Robot Painter");
-    SetTargetFPS(12);
+    SetTargetFPS(2);
 
     while (!WindowShouldClose()) {
         const Individual *best = &population.individuals[0];
@@ -110,12 +116,13 @@ int main(void) {
         DrawText(generation_text, PANEL_PADDING, 54, 22, DARKGRAY);
         DrawText(fitness_text, PANEL_PADDING + 220, 54, 22, DARKGRAY);
 
-        draw_solution_grid(target, PANEL_PADDING, 100, "Target pattern");
-        draw_solution_grid(best->solution, PANEL_PADDING * 2 + grid_width(), 100, "Best decoded solution");
-        draw_key_preview(best, PANEL_PADDING, 100 + grid_height() + 40);
+        draw_solution_grid(target, target_x, content_y, "Target pattern");
+        draw_solution_grid(best->solution, best_x, content_y, "Best decoded solution");
+        draw_key_preview(best, side_x, content_y);
 
-        DrawText("Decoder: shade = round(key * 255)", PANEL_PADDING, canvas_height - 78, 20, BLACK);
-        DrawText("Evolution: elites survive, offspring use biased crossover, mutants inject fresh random keys.", PANEL_PADDING, canvas_height - 46, 20, BLACK);
+        DrawText("Decoder: shade = round(key * 255)", side_x, content_y + 260, 20, BLACK);
+        DrawText("Evolution: elites survive, offspring use biased crossover,", side_x, content_y + 296, 20, BLACK);
+        DrawText("and mutants inject fresh random keys.", side_x, content_y + 324, 20, BLACK);
 
         EndDrawing();
     }
